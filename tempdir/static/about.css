@@ -103,6 +103,12 @@ a.active,a:hover{
 	border-radius: 10px;
     font-family: 'Times New Roman', Times, serif;
 }
+.preview-img{
+	margin-top: 15px;
+	margin-bottom: 10px;
+	justify-content: center;
+	margin: 20px 80px;
+}
 h2{
     text-align: center;
     font-size: 34px;
