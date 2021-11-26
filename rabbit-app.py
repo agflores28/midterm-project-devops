@@ -23,29 +23,42 @@ def more():
 def members():
     return render_template('members.html')
 
-@app.route('/login')
+@app.route('/login', methods = ["GET", "POST"])
 def login():
-    return render_template('login.html')
+
+    if request.method == 'GET':
+        return render_template('login.html')
+
+    else:
+        user_name = request.form['user_name']
+        password = request.form['password']
+        rec = tuple(user_collection.find({'user_name':user_name}))
+        if rec[0]['user_name'] == user_name and rec[0]['password'] == password:
+            return render_template('welcome.html')
+
+        else:
+            return render_template('login.html')
+
 
 @app.route('/signup', methods = ["GET", "POST"])
 def signup():
 
-    if request.methods == 'POST':
-        first_name = request.form['fname']
-        last_name = request.form['lname']
-        user_name = request.form['user']
-        password = request.form['pass']
+    if request.method == 'POST':
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        user_name = request.form['user_name']
+        password = request.form['password']
         new_user = {
-        "fname": first_name,
-        "lname": last_name,
-        "user": user_name,
-        "pass": password
+        "first_name": first_name,
+        "last_name": last_name,
+        "user_name": user_name,
+        "password": password
     }
         if first_name == '' or last_name == '' or user_name == '' or password == '':
             print("Invalid!")
 
         else:
-            user_collection.inser_one(new_user)
+            user_collection.insert_one(new_user)
             print("Inserted!")
 
     return render_template('signup.html')
