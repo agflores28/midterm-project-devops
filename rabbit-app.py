@@ -1,8 +1,13 @@
 from flask import Flask
 from flask import request
 from flask import render_template
+from flask.pymongo import pymongo
+
 
 app = Flask(__name__)
+
+client = pymongo.MongoClient("mongodb+srv://agflores:219219@cluster0.xrbao.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+
 
 @app.route('/')
 def main():
@@ -20,7 +25,7 @@ def members():
 def login():
     return render_template('login.html')
 
-@app.route('/signup')
+@app.route('/signup', methods = ["POST"])
 def signup():
     return render_template('signup.html')
 
