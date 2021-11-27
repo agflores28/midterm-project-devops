@@ -32,12 +32,12 @@ def login():
     else:
         user_name = request.form['user_name']
         password = request.form['password']
-        rec = tuple(user_collection.find({'user_name':user_name}))
-        if rec[0]['user_name'] == user_name and rec[0]['password'] == password:
-            return render_template('welcome.html')
+        rec = tuple(user_collection.find({'$and':[{'user_name': user_name, 'password': password}]}).limit(1) )
+        if rec:
+            return render_template('welcome.html',Registered = True, user_name = rec[0]['user_name'])
 
         else:
-            return render_template('login.html')
+            return render_template('login.html', Invalid = True)
 
 
 @app.route('/signup', methods = ["GET", "POST"])
@@ -53,15 +53,18 @@ def signup():
         "last_name": last_name,
         "user_name": user_name,
         "password": password
-    }
-        if first_name == '' or last_name == '' or user_name == '' or password == '':
-            print("Invalid!")
+        }
+        if tuple(user_collection.find({'user_name': user_name}).limit(1)):
+            return render_template('signup.html', Existing = True)
 
         else:
             user_collection.insert_one(new_user)
-            print("Inserted!")
+            return render_template('signup.html',Success = True, user_name = user_name)
 
-    return render_template('signup.html')
+    else:
+        return render_template('signup.html')
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=2828)
